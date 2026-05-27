@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scanner – VibeGuard</title>
+    <meta name="description"
+        content="Paste or upload code and get a full security audit in seconds." />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+</head>
+
+<body>
+
+    <div class="bg-mesh"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">
+            <div class="logo-icon">🛡️</div>
+            <span class="logo-text">Vibe<span>Guard</span></span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="scan.html" class="active">Scanner</a>
+            <a href="history.html">History</a>
+        </div>
+        <a href="history.html" class="nav-cta">📋 History</a>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="scan-header">
+            <h1>Code Security Scanner</h1>
+            <p>Paste your code, select the language, and run a full audit for vulnerabilities and logic issues.</p>
+        </div>
+
+        <div class="scan-layout scan-layout--desktop">
+
+            <!-- Left: Editor -->
+            <div style="display:flex;flex-direction:column;gap:1.25rem;">
+                <div class="scan-card">
+                    <div class="scan-toolbar">
+                        <select class="select-lang" id="lang-select">
+                            <option value="">Select language</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="typescript">TypeScript</option>
+                            <option value="python">Python</option>
+                            <option value="java">Java</option>
+                            <option value="csharp">C#</option>
+                            <option value="php">PHP</option>
+                            <option value="ruby">Ruby</option>
+                            <option value="go">Go</option>
+                            <option value="cpp">C++</option>
+                            <option value="html">HTML</option>
+                            <option value="css">CSS</option>
+                        </select>
+                        <label for="file-input" class="upload-btn">📁 Upload File</label>
+                        <input type="file" id="file-input" accept=".js,.ts,.jsx,.tsx,.py" />
+                        <span class="line-count" id="line-count">0 lines</span>
+                    </div>
+
+                    <div class="editor-wrapper">
+                        <div class="editor-header">
+                            <div class="dot-red"></div>
+                            <div class="dot-yellow"></div>
+                            <div class="dot-green"></div>
+                            <span class="editor-lang-badge" id="editor-lang-badge">javascript</span>
+                        </div>
+                        <textarea class="code-textarea" id="code-input" spellcheck="false" placeholder="// Paste your code here...
+// Example:
+const password = 'admin123';
+const query = 'SELECT * FROM users WHERE id=' + userId;
+document.getElementById('output').textContent = userInput;
+// Use a safe replacement for eval."></textarea>
+                    </div>
+
+                    <button class="analyze-btn" id="analyze-btn">
+                        <span id="btn-icon">▶</span>
+                        <span id="btn-text">Run Audit</span>
+                    </button>
+                </div>
+
+                <!-- Progress -->
+                <div class="scan-progress" id="scan-progress">
+                    <div class="progress-steps">
+                        <div class="progress-step" id="step-sast">
+                            <div class="step-icon">◷</div>
+                            <span>Running Static Analysis (SAST)…</span>
+                        </div>
+                        <div class="progress-step" id="step-ai">
+                            <div class="step-icon">◷</div>
+                            <span>Running Logic Audit…</span>
+                        </div>
+                        <div class="progress-step" id="step-score">
+                            <div class="step-icon">◷</div>
+                            <span>Calculating Quality Score…</span>
+                        </div>
+                        <div class="progress-step" id="step-road">
+                            <div class="step-icon">◷</div>
+                            <span>Generating Refactoring Roadmap…</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Settings Panel -->
+            <div style="display:flex;flex-direction:column;gap:1.25rem;">
+
+                <!-- Optional External Analysis Key -->
+                <div class="api-section">
+                    <h3>Optional External Audit Key <span style="font-size:0.75rem;font-weight:400;color:var(--text-muted)">(optional)</span></h3>
+                    <p>Enable optional external analysis for deeper logic validation. Without it, built-in SAST runs normally.</p>
+                    <div class="api-input-row">
+                        <input type="password" class="api-input" id="api-key-input" placeholder="sk-..." />
+                        <button class="save-btn" id="save-api-btn">Store</button>
+                    </div>
+                    <div class="api-status missing" id="api-status">⚠ No external audit key — built-in scan only</div>
+                </div>
+
+                <!-- Quick Guide -->
+                <div class="scan-card">
+                    <h3 class="scan-panel-title">🎯 What Gets Checked</h3>
+                    <div class="check-list">
+                        <div class="check-row"><span class="check-dot critical" aria-hidden="true"></span> Hardcoded credentials & API keys</div>
+                        <div class="check-row"><span class="check-dot critical" aria-hidden="true"></span> SQL Injection patterns</div>
+                        <div class="check-row"><span class="check-dot critical" aria-hidden="true"></span> Pickle deserialization (Python)</div>
+
+                        <div class="check-row"><span class="check-dot high" aria-hidden="true"></span> XSS via innerHTML</div>
+                        <div class="check-row"><span class="check-dot high" aria-hidden="true"></span> eval() & exec() usage</div>
+                        <div class="check-row"><span class="check-dot high" aria-hidden="true"></span> os.system() shell injection</div>
+                        <div class="check-row"><span class="check-dot high" aria-hidden="true"></span> Weak hashing (MD5/SHA1)</div>
+                        <div class="check-row"><span class="check-dot high" aria-hidden="true"></span> DEBUG mode enabled</div>
+
+                        <div class="check-row"><span class="check-dot medium" aria-hidden="true"></span> Insecure Math.random()</div>
+                        <div class="check-row"><span class="check-dot medium" aria-hidden="true"></span> HTTP (non-HTTPS) usage</div>
+
+                        <div class="check-row"><span class="check-dot low" aria-hidden="true"></span> console.log in prod</div>
+                        <div class="check-row"><span class="check-dot low" aria-hidden="true"></span> TODO/FIXME/HACK comments</div>
+
+                        <div class="check-row"><span class="check-dot info" aria-hidden="true"></span> External logic validation (with key)</div>
+                    </div>
+                </div>
+
+                <!-- Try Sample -->
+                <div class="scan-card">
+                    <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;">Try a Sample</h3>
+                    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;">Load a sample snippet to inspect the scan workflow and review common findings.</p>
+                    <div style="display:flex;flex-direction:column;gap:0.6rem;">
+                        <button class="export-btn sample-btn" onclick="loadSample('js')">JavaScript Sample (Vulnerable)</button>
+                        <button class="export-btn sample-btn" onclick="loadSample('py')">Python Sample (Vulnerable)</button>
+                        <button class="export-btn sample-btn" onclick="loadSample('clean')">Clean Code Sample</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/sast-engine.js"></script>
+    <script src="js/openai-audit.js"></script>
+    <script src="js/scoring.js"></script>
+    <script src="js/roadmap.js"></script>
+    <script src="js/scan.js"></script>
+    <script>
+        // Particles
+        (function () {
+            const c = document.getElementById('particles');
+            ['#7c3aed', '#00e5ff', '#ec4899'].forEach((col, i) => {
+                for (let j = 0; j < 6; j++) {
+                    const p = document.createElement('div'); p.className = 'particle';
+                    const s = Math.random() * 2 + 1;
+                    p.style.cssText = `width:${s}px;height:${s}px;left:${Math.random() * 100}%;background:${col};animation-duration:${Math.random() * 20 + 12}s;animation-delay:${Math.random() * 10}s;`;
+                    c.appendChild(p);
+                }
+            });
+        })();
+    </script>
+</body>
+
+</html>

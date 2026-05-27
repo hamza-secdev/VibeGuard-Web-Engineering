@@ -1,0 +1,28 @@
+{
+  "name": "vibeguard-backend",
+  "version": "1.0.0",
+  "description": "VibeGuard backend - scans code for security vulnerabilities and logic hallucinations.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "vercel-build": "echo \"No build step required\""
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.2",
+    "mongodb": "^7.2.0",
+    "mongoose": "^8.24.0",
+    "morgan": "^1.10.0",
+    "openai": "^6.39.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
